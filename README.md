@@ -2,9 +2,13 @@
 
 ## Domain Proyek
 
-Kanker paru-paru adalah salah satu penyakit dengan tingkat kematian tertinggi secara global. Keterlambatan diagnosis menyebabkan rendahnya tingkat kelangsungan hidup. Oleh karena itu, penerapan teknologi Machine Learning (ML) dalam deteksi dini dan klasifikasi kanker paru-paru menjadi sangat penting untuk meningkatkan outcome klinis pasien.
+Kanker paru-paru merupakan salah satu jenis kanker paling mematikan di dunia, dengan lebih dari 2,2 juta kasus baru setiap tahun dan tingkat kelangsungan hidup lima tahun yang hanya sekitar 25%. Tingkat kematian yang tinggi ini disebabkan oleh keterlambatan diagnosis dan kerumitan karakteristik sel kanker, seperti heterogenitas intra-tumor dan resistensi obat. Oleh karena itu, diperlukan pendekatan baru yang lebih canggih dan efisien untuk mendeteksi dan memprediksi risiko kanker paru-paru sejak dini.
 
-Gao et al. (2023) menekankan bahwa ML memungkinkan prediksi efikasi imunoterapi secara lebih tepat melalui pemodelan PD-L1, TMB, dan TME secara non-invasif. Dritsas & Trigka (2022) mengembangkan model ML berbasis data gejala untuk skrining awal kanker paru dengan akurasi tinggi. Li et al. (2022) menyimpulkan bahwa integrasi imaging dan omics data melalui ML dapat memperkuat diagnosis dan prediksi prognosis kanker paru.
+Machine Learning (ML) menjadi salah satu pendekatan paling menjanjikan untuk menjawab tantangan tersebut. ML mampu menganalisis berbagai jenis data baik klinis, imaging (CT, histopatologi), maupun omics (seperti RNA-seq, cfDNA, dan DNA methylation) untuk mendeteksi pola yang tidak mudah dikenali oleh manusia. Model ML tidak hanya membantu deteksi dini, tetapi juga digunakan dalam klasifikasi subtipe kanker (misalnya LUAD dan LUSC), prediksi respon terapi, hingga penentuan prognosis pasien secara presisi.
+
+Gao et al. (2023) menunjukkan bagaimana ML dapat memprediksi keberhasilan imunoterapi kanker paru melalui pemodelan biomarker penting seperti PD-L1, Tumor Mutation Burden (TMB), dan karakteristik mikro-lingkungan tumor (TME). Dritsas & Trigka (2022) berhasil mengembangkan model berbasis data klinis sederhana untuk mendeteksi kanker paru dengan akurasi tinggi menggunakan Rotation Forest. Sementara itu, Li et al. (2022) menyoroti pentingnya integrasi data besar dari imaging dan -omics untuk memperkuat diagnosis, klasifikasi, dan personalisasi terapi kanker paru-paru.
+
+Proyek ini berangkat dari kebutuhan tersebut: membangun model klasifikasi risiko kanker paru berbasis data klinis non-invasif yang ringan namun informatif. Dengan pendekatan ini, hasil prediksi dapat dimanfaatkan sebagai sistem skrining awal yang hemat biaya dan mudah diimplementasikan dalam sistem kesehatan primer.
 
 **Referensi Ilmiah:**
 
@@ -51,11 +55,13 @@ Dataset digunakan berasal dari [Kaggle - Lung Cancer Dataset](https://www.kaggle
 ### Visualisasi Distribusi Target
 
 ![Distribusi Target](assets/target_distribution.png)
+
 *Gambar 1. Distribusi kelas target: jumlah kasus kanker paru-paru positif dan negatif.*
 
 ### Heatmap Korelasi
 
 ![Heatmap Korelasi](assets/heatmap_correlation.png)
+
 *Gambar 2. Korelasi antar fitur prediktor terhadap variabel target.*
 
 ---
@@ -121,11 +127,13 @@ Langkah-langkah yang dilakukan:
 ### Visualisasi Perbandingan Metrik Model
 
 ![Perbandingan Akurasi](assets/accuracy_chart.png)
+
 *Gambar 3. Visualisasi perbandingan skor akurasi antar model ML.*
 
 ### Confusion Matrix
 
 ![Confusion Matrix ](assets/confusion_matrix.png)
+
 *Gambar 4. Confusion matrix pada model – performa klasifikasi.*
 
 ### Hasil Evaluasi Model:
