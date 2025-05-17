@@ -420,7 +420,3 @@ Solusi yang dirancang berdampak signifikan karena:
 * Gunakan **K-Fold Cross Validation** untuk menghindari bias dari split data tunggal.
 * Eksplorasi fitur tambahan dari data **imaging** dan **genomik** untuk akurasi lebih tinggi.
 * Pertimbangkan pengembangan menjadi **aplikasi prediktif** berbasis web/mobile untuk screening kanker paru-paru secara masif dan mudah diakses.
-
----
-
-Perlu file ini dalam bentuk Word atau PDF sebagai laporan akhir? Saya bisa bantu siapkan.
