@@ -212,6 +212,10 @@ plt.show()
 """## Modelling
 
 ### Modelling (Mensimulasikan Data Buatan)
+
+#### Preprocessing Dataset Simulasi Data Buatan
+
+#### Split Dataset
 """
 
 X, y = make_classification(n_samples=2998, n_features=5, random_state=42)
@@ -219,9 +223,16 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 
 print(f'Total data: {len(X)}, Train: {len(X_train)}, Test: {len(X_test)}')
 
+"""#### Standarisasi Dataset"""
+
 scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
+
+"""### Models Training
+
+#### Inisialisasi Model
+"""
 
 # Inisialisasi model
 models = {
@@ -234,12 +245,16 @@ models = {
     "AdaBoost": AdaBoostClassifier(random_state=42)
 }
 
+"""#### Melatih Model"""
+
 # Melatih model
 trained_models = {}
 for name, model in models.items():
     model.fit(X_train, y_train)
     trained_models[name] = model
     print(f" {name} telah dilatih.")
+
+"""#### Evaluasi Model"""
 
 # Evaluasi model
 results = {}
@@ -262,7 +277,7 @@ for name, model in trained_models.items():
         "Confusion Matrix": conf_matrix
     }
 
-    print(f" {name} selesai dievaluasi dengan akurasi: {accuracy:.4f}")
+    print(f" {name} selesai dievaluasi dengan akurasi (data simulasi buatan): {accuracy:.4f}")
 
 # Tampilkan hasil evaluasi
 for model, metrics in results.items():
@@ -300,6 +315,7 @@ for j in range(idx + 1, len(axes)):
 
 plt.tight_layout()
 plt.show()
+print("Data Simulasi")
 
 # Ambil nama model dan nilai akurasinya
 model_names = list(results.keys())
@@ -321,7 +337,7 @@ for i, (bar, percent) in enumerate(zip(bars.patches, accuracy_percent)):
 
 # Pengaturan tambahan
 plt.xlabel("Akurasi")
-plt.title("Perbandingan Akurasi Model (dalam Persentase)")
+plt.title("Perbandingan Akurasi Model (dalam Persentase Data Simulasi Buatan)")
 plt.xlim(0, 1.05)
 plt.grid(axis='x', linestyle='--', alpha=0.7)
 plt.tight_layout()
@@ -400,7 +416,7 @@ for name, model in trained_models.items():
         "Confusion Matrix": conf_matrix
     }
 
-    print(f" {name} selesai dievaluasi dengan akurasi: {accuracy:.4f}")
+    print(f" {name} selesai dievaluasi dengan akurasi Data Klinis: {accuracy:.4f}")
 
 # Tampilkan hasil evaluasi
 for model, metrics in results.items():
@@ -438,6 +454,7 @@ for j in range(idx + 1, len(axes)):
 
 plt.tight_layout()
 plt.show()
+print("Data Klinis")
 
 # Ambil nama model dan nilai akurasinya
 model_names = list(results.keys())
@@ -459,80 +476,190 @@ for i, (bar, percent) in enumerate(zip(bars.patches, accuracy_percent)):
 
 # Pengaturan tambahan
 plt.xlabel("Akurasi")
-plt.title("Perbandingan Akurasi Model (dalam Persentase)")
+plt.title("Perbandingan Akurasi Model (dalam Persentase Data Klinis)")
 plt.xlim(0, 1.05)
 plt.grid(axis='x', linestyle='--', alpha=0.7)
 plt.tight_layout()
 plt.show()
 
-"""## 🔍 **Evaluasi Model Klasifikasi Kanker Paru-Paru**
+"""## Modeling
 
-### 1. **Logistic Regression**
+Tahap *Modeling* merupakan inti dari proses prediksi, di mana berbagai algoritma pembelajaran mesin digunakan untuk mempelajari pola dari data pelatihan dan melakukan prediksi terhadap data pengujian. Dalam penelitian ini, implementasi modeling dilakukan dengan dua pendekatan dataset berbeda: **Data Simulasi** dan **Data Klinis** untuk memberikan perbandingan performa model dalam skenario yang berbeda.
 
-* **Akurasi**: 97.00%
-* **Precision / Recall / F1-Score**: Semuanya 97.00%
-* ✅ **Stabil dan efisien**, cocok sebagai baseline model dengan performa cukup tinggi dan konsisten.
+### 1. Logistic Regression
 
-### 2. **Random Forest**
+**Deskripsi:**
+Model klasifikasi biner yang memodelkan probabilitas kejadian berdasarkan fungsi logistik. Logistic Regression sangat efisien untuk dataset kecil hingga menengah dan bekerja baik jika hubungan antar fitur dan target bersifat linear.
 
-* **Akurasi**: **98.17%**
-* **Precision**: 98.18%
-* **Recall & F1-Score**: 98.17%
-* 🥇 **Model dengan performa terbaik**, sangat kuat dalam generalisasi dan menangani kompleksitas fitur tanpa overfitting berlebih.
+**Parameter:**
+* `penalty`: regularisasi L2 (default)
+* `C=1.0`: parameter regularisasi (semakin kecil, regularisasi semakin kuat)
+* `solver='lbfgs'`
+* `max_iter=10000`: digunakan agar model cukup waktu untuk konvergen
 
-### 3. **XGBoost**
+**Alasan pemilihan:**
+Digunakan sebagai baseline model karena efisien, cepat, dan mudah diinterpretasikan. Model ini menjadi acuan awal untuk membandingkan performa dengan model yang lebih kompleks.
 
-* **Akurasi**: 97.83%
-* **Precision**: 97.84%
-* **Recall & F1-Score**: 97.83%
-* ⚡ Performa tinggi dan efisien dalam menangani outlier dan fitur non-linear, mendekati Random Forest.
-
-### 4. **K-Nearest Neighbors (KNN)**
-
-* **Akurasi / Precision / Recall / F1-Score**: 97.50%
-* 🔄 Model sederhana dan efektif, cocok untuk data yang tidak terlalu besar, meskipun sensitif terhadap pemilihan parameter *k*.
-
-### 5. **Decision Tree**
-
-* **Akurasi**: 96.83%
-* **Precision**: 96.88%
-* **Recall**: 96.83%
-* **F1-Score**: 96.84%
-* 📉 Kinerja terendah dibanding model lain karena sifatnya yang mudah overfitting tanpa metode pemangkasan.
-
-### 6. **Gradient Boosting**
-
-* **Akurasi**: 98.00%
-* **Precision**: 98.02%
-* **Recall & F1-Score**: 98.00%
-* 🏆 Salah satu model dengan **stabilitas dan presisi tinggi**, unggul dalam menangani pola kompleks.
-
-### 7. **AdaBoost**
-
-* **Akurasi / Precision / Recall / F1-Score**: 97.50%
-* ✳️ Model boosting klasik yang memberi bobot pada data sulit. Efektif namun sedikit kalah dari Gradient Boosting dan Random Forest.
+**Performa:**
+- **Data Simulasi**: Akurasi 97.00%, Precision 97.00%, Recall 97.00%, F1-Score 97.00%
+- **Data Klinis**: Akurasi 49.67%, Precision 49.66%, Recall 49.67%, F1-Score 49.56%
 
 ---
 
-## 📊 **Perbandingan Singkat**
+### 2. K-Nearest Neighbors (KNN)
 
-| Model               | Accuracy   | Precision  | Recall     | F1-Score   |
-| ------------------- | ---------- | ---------- | ---------- | ---------- |
-| Logistic Regression | 0.9700     | 0.9700     | 0.9700     | 0.9700     |
-| Random Forest       | **0.9817** | **0.9818** | **0.9817** | **0.9817** |
-| XGBoost             | 0.9783     | 0.9784     | 0.9783     | 0.9783     |
-| KNN                 | 0.9750     | 0.9750     | 0.9750     | 0.9750     |
-| Decision Tree       | 0.9683     | 0.9688     | 0.9683     | 0.9684     |
-| Gradient Boosting   | 0.9800     | 0.9802     | 0.9800     | 0.9800     |
-| AdaBoost            | 0.9750     | 0.9750     | 0.9750     | 0.9750     |
+**Deskripsi:**
+Model berbasis instance yang mengklasifikasi data baru berdasarkan mayoritas kelas dari k tetangga terdekat dalam ruang fitur. Tidak membutuhkan pelatihan eksplisit dan sangat bergantung pada kemiripan data dalam ruang fitur.
+
+**Parameter:**
+* `n_neighbors=10`: jumlah tetangga terdekat yang dipertimbangkan
+* `metric='minkowski'` (default), menggunakan Euclidean distance sebagai metrik jarak
+
+**Alasan pemilihan:**
+Mudah diimplementasikan dan cocok untuk memahami performa awal model berbasis jarak. Dapat memberikan wawasan tentang distribusi spasial data dalam ruang fitur.
+
+**Performa:**
+- **Data Simulasi**: Akurasi 97.50%, Precision 97.50%, Recall 97.50%, F1-Score 97.50%
+- **Data Klinis**: Akurasi 53.83%, Precision 53.93%, Recall 53.83%, F1-Score 53.55%
 
 ---
 
-## 🎯 **Kesimpulan**
+### 3. Decision Tree
 
-* **Random Forest** memberikan performa terbaik secara keseluruhan.
-* **Gradient Boosting** dan **XGBoost** juga menunjukkan hasil luar biasa dan cocok untuk deployment model klasifikasi medis.
-* **Logistic Regression** tetap relevan karena kesederhanaannya dan interpretabilitas tinggi, meskipun tidak setinggi ensemble method.
+**Deskripsi:**
+Model yang memecah data secara rekursif berdasarkan fitur yang paling mengurangi impuritas. Cocok untuk data non-linear dan mudah diinterpretasikan melalui visualisasi pohon keputusan.
+
+**Parameter:**
+* `criterion='gini'` (default): pengukuran impuritas
+* `max_depth`: tidak diatur, memungkinkan pohon tumbuh penuh (berpotensi overfitting)
+* `random_state=42`: untuk hasil yang dapat direproduksi
+
+**Alasan pemilihan:**
+Interpretabilitas tinggi dan cepat dalam inferensi. Mampu menangkap interaksi non-linear dalam data secara visual yang mudah dipahami oleh tenaga medis.
+
+**Performa:**
+- **Data Simulasi**: Akurasi 96.83%, Precision 96.88%, Recall 96.83%, F1-Score 96.84%
+- **Data Klinis**: Akurasi 47.00%, Precision 46.99%, Recall 47.00%, F1-Score 46.97%
+
+---
+
+### 4. Random Forest
+
+**Deskripsi:**
+Model ansambel berbasis banyak pohon keputusan (decision trees) yang dilatih pada subset data dan fitur yang berbeda, lalu hasilnya dirata-rata. Mengurangi overfitting dibandingkan decision tree tunggal melalui teknik bagging.
+
+**Parameter:**
+* `n_estimators=100`: jumlah pohon dalam hutan
+* `max_features='auto'`: fitur dipilih secara acak
+* `random_state=42`: untuk hasil yang dapat direproduksi
+
+**Alasan pemilihan:**
+Lebih stabil, tahan terhadap overfitting, dan cocok untuk dataset menengah. Dapat menangani noise dan variasi dalam data klinis yang kompleks.
+
+**Performa:**
+- **Data Simulasi**: Akurasi 98.17%, Precision 98.18%, Recall 98.17%, F1-Score 98.17%
+- **Data Klinis**: Akurasi 53.67%, Precision 53.67%, Recall 53.67%, F1-Score 53.65%
+
+---
+
+### 5. Gradient Boosting
+
+**Deskripsi:**
+Model ansambel yang membangun model secara bertahap, memperbaiki kesalahan prediksi model sebelumnya menggunakan pendekatan *gradient descent*. Fokus pada kesalahan prediksi sebelumnya untuk perbaikan berurutan.
+
+**Parameter:**
+* `n_estimators=100`: jumlah model berurutan
+* `learning_rate=0.1`: mengontrol kontribusi setiap model ke prediksi final
+* `random_state=42`: untuk hasil yang dapat direproduksi
+
+**Alasan pemilihan:**
+Sangat akurat dalam banyak kompetisi klasifikasi, walaupun lebih lambat dibanding Random Forest. Mampu memperbaiki prediksi secara berurutan sehingga berpotensi lebih baik dalam penanganan kasus sulit.
+
+**Performa:**
+- **Data Simulasi**: Akurasi 98.00%, Precision 98.02%, Recall 98.00%, F1-Score 98.00%
+- **Data Klinis**: Akurasi 55.50%, Precision 55.55%, Recall 55.50%, F1-Score 55.40%
+
+---
+
+### 6. AdaBoost
+
+**Deskripsi:**
+Model boosting yang melatih model sederhana secara berurutan dan menyesuaikan bobot pada data yang sebelumnya salah prediksi. Fokus pada sampel yang sulit diklasifikasi.
+
+**Parameter:**
+* `n_estimators=50`: jumlah model berurutan
+* `learning_rate=1.0`: kontrol kontribusi setiap model
+* `random_state=42`: untuk hasil yang dapat direproduksi
+
+**Alasan pemilihan:**
+Mengatasi bias, terutama ketika model dasar lemah, dan cukup efisien. Baik untuk situasi di mana beberapa kasus khusus sulit dideteksi oleh model lain.
+
+**Performa:**
+- **Data Simulasi**: Akurasi 97.50%, Precision 97.50%, Recall 97.50%, F1-Score 97.50%
+- **Data Klinis**: Akurasi 51.00%, Precision 51.00%, Recall 51.00%, F1-Score 51.00%
+
+---
+
+### 7. XGBoost
+
+**Deskripsi:**
+Varian efisien dari gradient boosting dengan kemampuan regularisasi tambahan dan optimasi yang lebih baik. Sangat populer dalam kompetisi ML karena akurasi tinggi dan performa komputasi yang efisien.
+
+**Parameter:**
+* `use_label_encoder=False`
+* `eval_metric='logloss'`
+* `n_estimators=100`: jumlah model berurutan
+* `learning_rate=0.1`: kontrol kontribusi setiap model
+* `random_state=42`: untuk hasil yang dapat direproduksi
+
+**Alasan pemilihan:**
+Presisi tinggi dan efisien dalam menangani missing values serta fitur dalam skala besar. Terkenal dengan performa superior dalam berbagai kompetisi ML dan aplikasi dunia nyata.
+
+**Performa:**
+- **Data Simulasi**: Akurasi 97.83%, Precision 97.84%, Recall 97.83%, F1-Score 97.83%
+- **Data Klinis**: Akurasi 51.17%, Precision 51.17%, Recall 51.17%, F1-Score 51.12%
+
+---
+
+## Perbandingan Performa Model
+
+### Data Simulasi vs Data Klinis
+
+Terdapat perbedaan signifikan pada performa model antara data simulasi dan data klinis nyata:
+
+#### Data Simulasi
+Data simulasi dibuat dengan fungsi `make_classification()` dari scikit-learn yang menghasilkan data sintetis dengan pola yang mudah dikenali:
+
+```python
+X, y = make_classification(n_samples=2998, n_features=5, random_state=42)
+```
+
+Semua model menunjukkan performa sangat tinggi (96.83% - 98.17%), dengan Random Forest sebagai model terbaik.
+
+#### Data Klinis
+Data klinis nyata berasal dari dataset kanker paru-paru dengan variabel target 'LUNG_CANCER':
+
+```python
+X = df.drop('LUNG_CANCER', axis=1)
+y = df['LUNG_CANCER']
+```
+
+Performa pada data klinis jauh lebih rendah (47.00% - 55.50%), menunjukkan kompleksitas dan tantangan pada data medis nyata dibandingkan data simulasi.
+
+### Tabel Perbandingan Performa Model
+
+| Model | Data Simulasi |  |  |  | Data Klinis |  |  |  |
+|-------|---------------|--------------|--------------|--------------|-------------|-------------|-------------|-------------|
+|  | **Accuracy** | **Precision** | **Recall** | **F1-Score** | **Accuracy** | **Precision** | **Recall** | **F1-Score** |
+| Logistic Regression | 0.9700 | 0.9700 | 0.9700 | 0.9700 | 0.4967 | 0.4966 | 0.4967 | 0.4956 |
+| Random Forest | **0.9817** | **0.9818** | **0.9817** | **0.9817** | 0.5367 | 0.5367 | 0.5367 | 0.5365 |
+| XGBoost | 0.9783 | 0.9784 | 0.9783 | 0.9783 | 0.5117 | 0.5117 | 0.5117 | 0.5112 |
+| K-Nearest Neighbors | 0.9750 | 0.9750 | 0.9750 | 0.9750 | 0.5383 | 0.5393 | 0.5383 | 0.5355 |
+| Decision Tree | 0.9683 | 0.9688 | 0.9683 | 0.9684 | 0.4700 | 0.4699 | 0.4700 | 0.4697 |
+| Gradient Boosting | 0.9800 | 0.9802 | 0.9800 | 0.9800 | **0.5550** | **0.5555** | **0.5550** | **0.5540** |
+| AdaBoost | 0.9750 | 0.9750 | 0.9750 | 0.9750 | 0.5100 | 0.5100 | 0.5100 | 0.5100 |
+
+---
 
 # References
 
