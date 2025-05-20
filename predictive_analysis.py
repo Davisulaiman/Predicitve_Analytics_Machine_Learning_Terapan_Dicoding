@@ -170,6 +170,11 @@ categorical_columns = ['GENDER', 'SMOKING', 'YELLOW_FINGERS', 'ANXIETY',
 for col in categorical_columns:
     df[col] = le.fit_transform(df[col])
 
+print(df['LUNG_CANCER'].value_counts())
+sns.countplot(x='LUNG_CANCER', data=df)
+plt.title("Distribusi Kelas Target")
+plt.show()
+
 """## Data Understanding"""
 
 df.info()
@@ -206,13 +211,138 @@ plt.show()
 
 """## Modelling
 
+### Modelling (Mensimulasikan Data Buatan)
+"""
+
+X, y = make_classification(n_samples=2998, n_features=5, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+print(f'Total data: {len(X)}, Train: {len(X_train)}, Test: {len(X_test)}')
+
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Inisialisasi model
+models = {
+    "Logistic Regression": LogisticRegression(max_iter=10000, random_state=42),
+    "Random Forest": RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1),
+    "XGBoost": XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42),
+    "K-Nearest Neighbors": KNeighborsClassifier(n_neighbors=10),
+    "Decision Tree": DecisionTreeClassifier(random_state=42),
+    "Gradient Boosting": GradientBoostingClassifier(random_state=42),
+    "AdaBoost": AdaBoostClassifier(random_state=42)
+}
+
+# Melatih model
+trained_models = {}
+for name, model in models.items():
+    model.fit(X_train, y_train)
+    trained_models[name] = model
+    print(f" {name} telah dilatih.")
+
+# Evaluasi model
+results = {}
+for name, model in trained_models.items():
+    y_pred = model.predict(X_test)
+
+    # Menghitung metrik evaluasi
+    accuracy = accuracy_score(y_test, y_pred)
+    precision = precision_score(y_test, y_pred, average='weighted')
+    recall = recall_score(y_test, y_pred, average='weighted')
+    f1 = f1_score(y_test, y_pred, average='weighted')
+    conf_matrix = confusion_matrix(y_test, y_pred)
+
+    # Simpan hasil evaluasi
+    results[name] = {
+        "Accuracy": accuracy,
+        "Precision": precision,
+        "Recall": recall,
+        "F1-Score": f1,
+        "Confusion Matrix": conf_matrix
+    }
+
+    print(f" {name} selesai dievaluasi dengan akurasi: {accuracy:.4f}")
+
+# Tampilkan hasil evaluasi
+for model, metrics in results.items():
+    print(f"\n Model: {model}")
+    for metric, value in metrics.items():
+        if metric != "Confusion Matrix":
+            print(f"  {metric}: {value:.4f}")
+    print("-" * 50)
+
+# Jumlah total model
+model_names = list(results.keys())
+n_models = len(model_names)
+
+# Buat subplot: 4 kolom per baris
+cols = 4
+rows = (n_models + cols - 1) // cols  # pembulatan ke atas
+
+fig, axes = plt.subplots(rows, cols, figsize=(6 * cols, 5 * rows))
+
+# Flatten axes untuk akses mudah jika hanya 1 baris
+axes = axes.flatten()
+
+# Plot masing-masing confusion matrix
+for idx, (name, metrics) in enumerate(results.items()):
+    sns.heatmap(metrics["Confusion Matrix"], annot=True, fmt="d", cmap="Blues",
+                xticklabels=sorted(set(y_test)), yticklabels=sorted(set(y_test)),
+                ax=axes[idx])
+    axes[idx].set_title(f"Confusion Matrix - {name}")
+    axes[idx].set_xlabel("Predicted Label")
+    axes[idx].set_ylabel("True Label")
+
+# Kosongkan subplot jika tidak terpakai (jika model tidak kelipatan 3)
+for j in range(idx + 1, len(axes)):
+    fig.delaxes(axes[j])
+
+plt.tight_layout()
+plt.show()
+
+# Ambil nama model dan nilai akurasinya
+model_names = list(results.keys())
+accuracies = [metrics["Accuracy"] for metrics in results.values()]
+accuracy_percent = [f"{acc*100:.2f}%" for acc in accuracies]
+
+# Buat plot
+plt.figure(figsize=(10, 6))
+bars = sns.barplot(x=accuracies, y=model_names, palette="coolwarm")
+
+# Tambahkan label persentase di ujung bar
+for i, (bar, percent) in enumerate(zip(bars.patches, accuracy_percent)):
+    plt.text(
+        bar.get_width() + 0.01,  # Posisi x: sedikit di luar bar
+        bar.get_y() + bar.get_height() / 2,  # Posisi y: tengah-tengah bar
+        percent,
+        va='center'
+    )
+
+# Pengaturan tambahan
+plt.xlabel("Akurasi")
+plt.title("Perbandingan Akurasi Model (dalam Persentase)")
+plt.xlim(0, 1.05)
+plt.grid(axis='x', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+
+"""### Modelling (mensimulasikan data Klinis)
+
 ### Data Preparation (Preprocessing Dataset)
 
 #### Split Dataset
 """
 
-X, y = make_classification(n_samples=2998, n_features=5, random_state=42)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Pisahkan fitur dan target dari dataset asli
+X = df.drop('LUNG_CANCER', axis=1)
+y = df['LUNG_CANCER']
+
+# Split data menjadi data latih dan uji
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
 
 print(f'Total data: {len(X)}, Train: {len(X_train)}, Test: {len(X_test)}')
 
