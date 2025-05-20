@@ -386,6 +386,7 @@ Performa pada data klinis jauh lebih rendah (47.00% - 55.50%), menunjukkan kompl
 ![Confusion Matrix ](assets/confusion_matrix_klinis.png)
 
 *Gambar 6. Confusion matrix pada model – performa klasifikasi (Data Klinis).*
+
 ---
 
 
@@ -425,45 +426,100 @@ Kedua model menunjukkan keunggulan pendekatan ansambel berbasis tree untuk menan
 
 ### Apakah Model Menjawab Problem Statements?
 
-✅ **Ya.**
-Model yang dibangun mampu mengidentifikasi individu dengan risiko tinggi terkena kanker paru-paru **hanya berdasarkan data klinis non-invasif**, menjawab problem pertama secara langsung.
+#### Problem Statement 1: Identifikasi Risiko dari Data Klinis
+ **Untuk Data Simulasi:** Ya
+- Model berhasil mengidentifikasi individu dengan risiko tinggi kanker paru-paru dengan akurasi sangat tinggi (>96%)
+- Random Forest memberikan performa terbaik dengan akurasi 98.17%
 
-✅ **Ya.**
-Dengan membandingkan performa tujuh algoritma ML, laporan ini berhasil mengidentifikasi **Random Forest sebagai model dengan performa terbaik**, menjawab problem kedua.
+ **Untuk Data Klinis:** Sebagian
+- Model dapat mengidentifikasi individu berisiko, namun dengan akurasi moderat (55.50% terbaik)
+- Meskipun akurasi terbatas, model masih memberikan dasar awal untuk sistem skrining
+
+#### Problem Statement 2: Algoritma Terbaik
+ **Untuk Data Simulasi:** Random Forest (98.17%)
+ **Untuk Data Klinis:** Gradient Boosting (55.50%)
+
+Perbedaan ini menunjukkan bahwa pemilihan algoritma terbaik sangat bergantung pada karakteristik dataset yang digunakan.
 
 ---
 
 ### Apakah Model Mencapai Goals?
 
-✅ **Membangun Model Klasifikasi:**
-Model dikembangkan menggunakan data klinis yang sederhana dan menghasilkan **akurasi tinggi** di atas 97% pada semua model utama.
+#### Goal 1: Model Klasifikasi Berbasis Data Non-Invasif
+ **Untuk Data Simulasi:** Tercapai
+- Semua model menunjukkan performa sangat baik (>96% akurasi)
+- Membuktikan bahwa pendekatan ML dapat digunakan untuk klasifikasi risiko kanker
 
-✅ **Pemilihan Model Terbaik:**
-Dilakukan evaluasi menyeluruh terhadap tujuh algoritma menggunakan metrik evaluasi utama. Pemilihan **Random Forest** didasarkan pada hasil evaluasi kuantitatif yang solid.
+ **Untuk Data Klinis:** Tercapai Sebagian
+- Model berhasil memberikan klasifikasi, namun dengan akurasi yang lebih rendah
+- Menunjukkan bahwa data klinis nyata membutuhkan pendekatan yang lebih canggih
+
+#### Goal 2: Perbandingan dan Pemilihan Model Terbaik
+ **Tercapai Penuh**
+- Evaluasi komprehensif dilakukan untuk 7 algoritma berbeda
+- Perbandingan dilakukan pada dua jenis dataset, memberikan perspektif lebih lengkap
+- Model terbaik berhasil diidentifikasi pada masing-masing dataset
 
 ---
 
 ### Apakah Solusi yang Diberikan Berdampak?
 
-✅ **Ya.**
-Solusi yang dirancang berdampak signifikan karena:
+Solusi yang dirancang memiliki dampak berbeda pada dua skenario:
 
-* Memberikan dasar sistem **skrining dini** terhadap kanker paru-paru.
-* Dapat diimplementasikan di fasilitas kesehatan dengan data yang mudah dikumpulkan.
-* Berpotensi menurunkan angka keterlambatan diagnosis melalui **deteksi berbasis data klinis sederhana**.
+#### Dampak pada Skenario Simulasi:
+ **Dampak Sangat Positif**
+- Dapat menjadi sistem prediksi yang sangat akurat (>98%)
+- Memberikan kepercayaan diri pada implementasi solusi ML untuk kasus serupa
+
+#### Dampak pada Skenario Klinis Nyata:
+ **Dampak Potensial dengan Batasan**
+- Menyediakan dasar awal untuk sistem skrining (55.50% lebih baik dari acak 50%)
+- Mengidentifikasi arah pengembangan untuk meningkatkan akurasi sistem
+- Menunjukkan algoritma mana yang lebih cocok untuk data klinis kompleks
+- Berpotensi bermanfaat sebagai sistem penunjang keputusan, bukan sebagai alat diagnosa mandiri
+
+Tantangan pada data klinis sebenarnya menyoroti kebutuhan untuk:
+1. Mengumpulkan data tambahan yang lebih diskriminatif
+2. Melakukan feature engineering lebih mendalam
+3. Menggunakan pendekatan hybrid yang menggabungkan model ML dengan pengetahuan ahli medis
+
+
+---
+
+## Rekomendasi dan Langkah Selanjutnya
+
+Berdasarkan hasil modeling, beberapa rekomendasi untuk meningkatkan performa pada data klinis:
+
+1. **Peningkatan Kualitas Data**:
+   - Penanganan missing values yang lebih baik
+   - Normalisasi dan standarisasi fitur
+   - Penerapan SMOTE atau teknik resampling lain untuk mengatasi ketidakseimbangan kelas
+
+2. **Feature Engineering**:
+   - Ekstraksi fitur tambahan dari data yang ada
+   - Transformasi fitur non-linear
+   - Penggunaan PCA atau teknik reduksi dimensi lain
+
+3. **Optimasi Model**:
+   - Hyperparameter tuning untuk model terbaik (Gradient Boosting dan Random Forest)
+   - Implementasi algoritma Deep Learning
+   - Pendekatan ensemble dari beberapa model terbaik
+
+4. **Domain Knowledge**:
+   - Konsultasi dengan ahli medis untuk pemilihan fitur yang lebih relevan
+   - Pembobotan fitur berdasarkan signifikansi klinis
+
+5. **Validasi Lintas Model**:
+   - Implementasi K-Fold Cross Validation untuk menguji stabilitas model
+   - Validasi eksternal dengan dataset independen
 
 ---
 
 ## Kesimpulan
 
-* **Random Forest** memberikan performa terbaik secara keseluruhan dalam mendeteksi risiko kanker paru-paru.
-* Pendekatan ML terbukti mampu menyelesaikan tantangan prediksi medis secara efisien dan akurat.
-* Evaluasi menunjukkan bahwa seluruh problem, goals, dan solusi yang dirumuskan di awal berhasil dijawab dan tercapai.
+1. Terdapat perbedaan fundamental dalam tingkat kesulitan prediksi antara data simulasi dan data klinis nyata
+2. Model berbasis ansambel (Gradient Boosting dan Random Forest) menunjukkan performa terbaik di kedua jenis dataset
+3. Performa moderat pada data klinis (55.50%) menunjukkan potensi untuk pengembangan lebih lanjut, namun juga menegaskan tantangan inherent dalam diagnosis kanker paru-paru berbasis data klinis sederhana
+4. Pemahaman terhadap kedua dataset memberikan perspektif lengkap tentang kemampuan dan batasan model ML dalam konteks medis
 
----
-
-## Saran Pengembangan
-
-* Gunakan **K-Fold Cross Validation** untuk menghindari bias dari split data tunggal.
-* Eksplorasi fitur tambahan dari data **imaging** dan **genomik** untuk akurasi lebih tinggi.
-* Pertimbangkan pengembangan menjadi **aplikasi prediktif** berbasis web/mobile untuk screening kanker paru-paru secara masif dan mudah diakses.
+Dengan hasil modeling ini, penelitian dapat dilanjutkan untuk mengembangkan model yang lebih baik dengan fokus pada peningkatan performa pada data klinis, yang merupakan representasi lebih akurat dari tantangan prediksi kanker paru-paru di dunia nyata.
